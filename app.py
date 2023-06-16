@@ -204,6 +204,4 @@ def shorten_url(variable_1):
                  "short-url": short_url
             })
             return short_url
-if __name__ == '__main__':
-    app.run()
 
