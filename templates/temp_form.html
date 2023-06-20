@@ -148,7 +148,7 @@
   
 
               </div>
-              <div class="form-check form-switch">
+              <!-- <div class="form-check form-switch">
                 {% if form_data['admin_notify_new_responses']== 0 %}
                 <input class="form-check-input" type="checkbox" role="switch" id="form_admin_notify_new_responses" >
                 {% else %}
@@ -157,7 +157,7 @@
                 <label class="form-check-label" for="">Notify me for new responses</label>
   
 
-              </div>
+              </div> -->
             </div>
             <div class="modal-footer">
               <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -175,6 +175,7 @@
               <h5 class="modal-title" id="exampleModalLabel">Properties of Fields!!</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            
             <div class="modal-body">
               <div class="row " id="Properties_Fields">
                 {% call catch('') %}
@@ -210,8 +211,7 @@
               </div>
             </div>
             <div class="modal-footer">
-              <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-info">Save changes</button> -->
+              <p style="color:red">**If you find any field empty, refresh the page</p>
             </div>
           </div>
         </div>
@@ -270,12 +270,12 @@
         <div class="mb-3" id="Details_Modal_Body">
           <label for="exampleFormControlInput1" class="form-label">Public URL</label>
           <button class="btn-sm btn-info contri_btn fnt my-1" style="float:right" onclick="Copy_Clip()">Copy Link</button>
-          {% if not form_data['short-url']%}
+          <!-- {% if not form_data['short-url']%}
           <button class="btn-sm btn-info contri_btn fnt m-1" id="short-url-button" style="float:right" onclick="Shorten_Url()">Shorten Url</button>
-          {% endif %}
+          {% endif %} -->
           <input type="text" class="form-control" id="public_url_form"  disabled>
           {% if form_data['short-url']%}
-          <label for="exampleFormControlInput1" class="form-label">Shortened URL</label>
+          <!-- <label for="exampleFormControlInput1" class="form-label">Shortened URL</label> -->
           <input type="text" class="form-control" id="shortened_public_url_form" value="{{form_data['short-url']}}" disabled>
           {% endif %}
   
@@ -630,8 +630,8 @@
       }
       function Remove_Field(id){
             document.getElementById(id).remove()
-            document.getElementById("div_props_"+id).remove()
-            document.getElementById("div_input_props_"+id).remove()
+            // document.getElementById("div_props_"+id).remove()
+            // document.getElementById("div_input_props_"+id).remove()
             delete data[id]
       }
    
@@ -644,7 +644,8 @@
             "main":param
           },
         }).done(function(data) {
-            alert("Form Saved")
+            // alert("Form Saved")
+            window.location.reload()
         }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
             console.log(XMLHttpRequest);
             alert("error");
@@ -713,40 +714,40 @@
         }
     })
 
-    document.getElementById("form_admin_notify_new_responses").addEventListener('change',function(e){
-        if(this.checked){
-          $.ajax({
-            url: "{{form_data['callback_url']}}"+"/change-resp-code",
-            type:'POST',
-            data:{
-              'resp_code':1,
-              'name':1
-            }
-          }).done(function(data) {
+    // document.getElementById("form_admin_notify_new_responses").addEventListener('change',function(e){
+    //     if(this.checked){
+    //       $.ajax({
+    //         url: "{{form_data['callback_url']}}"+"/change-resp-code",
+    //         type:'POST',
+    //         data:{
+    //           'resp_code':1,
+    //           'name':1
+    //         }
+    //       }).done(function(data) {
              
-          }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
-              console.log(XMLHttpRequest);
-              alert("error");
-          })
-        }
-        else{
-          $.ajax({
-            url: "{{form_data['callback_url']}}"+"/change-resp-code",
-            type:'POST',
-            data:{
-              'resp_code':0,
-              'name':1
-            }
-          }).done(function(data) {
+    //       }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
+    //           console.log(XMLHttpRequest);
+    //           alert("error");
+    //       })
+    //     }
+    //     else{
+    //       $.ajax({
+    //         url: "{{form_data['callback_url']}}"+"/change-resp-code",
+    //         type:'POST',
+    //         data:{
+    //           'resp_code':0,
+    //           'name':1
+    //         }
+    //       }).done(function(data) {
        
-          }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
-              console.log(XMLHttpRequest);
-              alert("error");
-          })
-        }
-    })
+    //       }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
+    //           console.log(XMLHttpRequest);
+    //           alert("error");
+    //       })
+    //     }
+    // })
 
-   
+   console.log("___MBSA____")
    all_required_checkboxes = document.getElementsByClassName("required_checkboxes_fields")
    for(let i =0;i<all_required_checkboxes.length;i++){
     all_required_checkboxes[i].addEventListener('change',function(e){

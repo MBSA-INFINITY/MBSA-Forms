@@ -1,15 +1,17 @@
-from flask import Flask,render_template,request,url_for,make_response,redirect
+from flask import Flask, render_template, request, url_for, make_response, redirect, session
 from firebase import Firebase
+from definitions import day_number, month_number
 import json
 import datetime
 import requests
+import os
 
 #Url Shortening
-header = {
-    "Authorization":"bbf116bb1fea464e353f69668d1fedbffed3e885",
-    "Content-Type": "application/json"
-}
-url = 'https://api-ssl.bitly.com/v4/shorten'
+# header = {
+#     "Authorization":"bbf116bb1fea464e353f69668d1fedbffed3e885",
+#     "Content-Type": "application/json"
+# }
+# url = 'https://api-ssl.bitly.com/v4/shorten'
 
 def handle_catch(caller, on_exception):
     try:
@@ -18,24 +20,25 @@ def handle_catch(caller, on_exception):
          return on_exception
 
 config = {
-  "apiKey": "AIzaSyAn1bv1HgddTY8i2KJIUpSjbt2z5VeysIs",
-  "authDomain": "iris-web-team.firebaseapp.com",
-  "databaseURL": "https://iris-web-team-default-rtdb.firebaseio.com",
-  "projectId": "iris-web-team",
-  "storageBucket": "iris-web-team.appspot.com",
-  "messagingSenderId": "923629246355",
-  "appId": "1:923629246355:web:12e9f02d1b6272f39bfa66",
-  "measurementId": "G-NJKHGW72RV"
-  };
+  "apiKey": os.environ.get("FIREBASE_APIKEY"),
+  "authDomain": os.environ.get("FIREBASE_AUTHDOMAIN"),
+  "databaseURL": os.environ.get("FIREBASE_DATABASEURL"),
+  "projectId": os.environ.get("FIREBASE_PROJECT_ID"),
+  "storageBucket": os.environ.get("FIREBASE_STORAGE_BUCKET"),
+  "messagingSenderId": os.environ.get("FIREBASE_MESSAGING_SENDER_ID"),
+  "appId": os.environ.get("FIREBASE_APP_ID"),
+  "measurementId": os.environ.get("FIREBASE_MEASUREMENT_ID")
+  }
+
 
 firebase = Firebase(config)
 db = firebase.database()
 auth = firebase.auth()
 app = Flask(__name__)
 
-month_number = {"1":"January","2":"February","3":"March","4":"April","5":"May","6":"June","7":"July","8":"August","9":"September","10":"October","11":"November","12":"December"}
+app.secret_key = os.environ.get("SESSION_SECRET_KEY")
 
-day_number = { "1":"Monday","2":"Tuesday","3":"Wednesday","4":"Thursday","5":"Friday","6":"Saturday","7":"Sunday" }
+exempted_endpoints = ['index','static','passchange','signup','open_form']
 
 @app.route("/",methods = ['GET','POST'])
 def index():
@@ -43,19 +46,13 @@ def index():
         uname = request.form.get("username")
         upass = request.form.get("password")
         try:
-            user_ = auth.sign_in_with_email_and_password(uname ,upass)
-            try:
-                all_forms = db.child("Forms").child(request.cookies.get("__user__")).get().val()
-            except:
-                all_forms  = {}
-            resp = make_response(render_template("dashboard.html",forms = all_forms,handle_catch = handle_catch))
-            resp.set_cookie('__user__', user_['localId'],max_age=60*60*24)
-            resp.set_cookie('__email__', user_['email'],max_age=60*60*24)
-            return resp
-            
+            user = auth.sign_in_with_email_and_password(uname ,upass)
+            print(user['localId'])
+            session['user_id'] = user['localId']
+            all_forms = db.child("Forms").child(user['localId']).get().val()
+            return render_template("dashboard.html",forms = all_forms,handle_catch = handle_catch)
 
         except Exception  as e:
-            # return str(e)
             mes_code = json.loads(e.args[1])['error']['message']
             if(mes_code == "INVALID_PASSWORD"):
                 res_code = 500
@@ -63,8 +60,8 @@ def index():
                 res_code = 502
             return render_template("index.html",res_code = res_code,handle_catch = handle_catch)
     
-    if request.cookies.get('__user__')is not None and request.cookies.get('__email__') is not None:
-        all_forms = db.child("Forms").child(request.cookies.get("__user__")).get().val()
+    if 'user_id' in session:
+        all_forms = db.child("Forms").child(session['user_id'] ).get().val()
         return render_template("dashboard.html",forms = all_forms,handle_catch = handle_catch)
 
     return render_template("index.html",handle_catch = handle_catch)
@@ -74,11 +71,11 @@ def open_form(variable_1):
     if request.method == 'POST':
         dictionary = json.loads(request.form['main'])
         dictionary['timestamp'] = 'timestamp'
-        db.child("Forms").child(request.cookies.get("__user__")).child(variable_1).child("data").set(dictionary)
+        db.child("Forms").child(session['user_id']).child(variable_1).child("data").set(dictionary)
         return "0"
-    form_data_edit= db.child("Forms").child(request.cookies.get("__user__")).child(variable_1).get().val()
+    form_data_edit= db.child("Forms").child(session['user_id']).child(variable_1).get().val()
     form_data_edit['callback_url'] = f"/edit/{variable_1}"
-    form_data_edit['public_url'] = f"/public/{request.cookies.get('__user__')}/{variable_1}"
+    form_data_edit['public_url'] = f"/public/{session['user_id']}/{variable_1}"
     return render_template("temp_form.html",form_data =form_data_edit,handle_catch =handle_catch)
 
 @app.route("/edit/<string:variable_1>/change-resp-code",methods=['GET','POST'])
@@ -86,13 +83,13 @@ def change_resp_code_form(variable_1):
     if request.method == 'POST':
         if (dict(request.form)['name']=="0"):
             resp_code = dict(request.form)['resp_code']
-            db.child("Forms").child(request.cookies.get("__user__")).child(variable_1).update({
+            db.child("Forms").child(session['user_id']).child(variable_1).update({
                 'accepting_response':int(resp_code)
             })
             return resp_code
         elif (dict(request.form)['name']=="1"):
             resp_code = dict(request.form)['resp_code']
-            db.child("Forms").child(request.cookies.get("__user__")).child(variable_1).update({
+            db.child("Forms").child(session['user_id']).child(variable_1).update({
                 'admin_notify_new_responses':int(resp_code)
             })
             return resp_code
@@ -136,9 +133,9 @@ def public_form(variable_1,variable_2):
 
 @app.route("/new-form",methods=['GET','POST'])
 def new_form():
-    if request.method == 'POST' and request.cookies.get("__user__"):
+    if request.method == 'POST' and session['user_id']:
         form_title = request.form.get("form_title") 
-        new_form = db.child("Forms").child(request.cookies.get("__user__")).push({
+        new_form = db.child("Forms").child(session['user_id']).push({
             "form_title":form_title,
             "accepting_response":1,
             "admin_notify_new_responses":0
@@ -178,30 +175,47 @@ def passchange():
 @app.route("/form-delete/<string:form_id>",methods = ['GET','POST'])
 def delete(form_id):
     if request.method == 'POST':
-        db.child("Forms").child(request.cookies.get("__user__")).child(form_id).remove()
+        db.child("Forms").child(session['user_id']).child(form_id).remove()
         return redirect(url_for('index'))
+    
+@app.route("/logout")
+def logout_form():
+    session.pop("user_id")
+    return redirect("/")
+
+@app.before_request
+def before_request_func():
+    print(request.endpoint)
+    if request.endpoint in exempted_endpoints:
+        return 
+    if 'user_id' not in session:
+        return redirect("/")
 
 
-@app.route("/edit/<string:variable_1>/shorten-url",methods = ['GET','POST'])
-def shorten_url(variable_1):
-    if request.method == "POST":
-        if request.method == 'POST' and request.cookies.get("__user__"):
-            # url_to_short = request.form['public_url_form']
-            # url = 'https://api-ssl.bitly.com/v4/shorten'
-            # myobj = {
-            #     "long_url": url_to_short
+# @app.route("/edit/<string:variable_1>/shorten-url",methods = ['GET','POST'])
+# def shorten_url(variable_1):
+#     if request.method == "POST":
+#         if request.method == 'POST' and session['user_id']:
+#             url_to_short = request.form['public_url_form']
+#             url = 'https://api-ssl.bitly.com/v4/shorten'
+#             myobj = {
+#                 "long_url": url_to_short
             
             
-            # }
-            # x = requests.post(url, json = myobj,headers=header)
-            # short_url = x.link
-            # db.child("Forms").child(request.cookies.get("__user__")).child(variable_1).update({
+#             }
+#             x = requests.post(url, json = myobj,headers=header)
+#             print(dict(x))
+#             short_url = x.link
+#             db.child("Forms").child(session['user_id']).child(variable_1).update({
+#                  "short-url": short_url
+#             })
+#             return short_url
+            # short_url = "Bhai Bhai"
+            # db.child("Forms").child(session['user_id']).child(variable_1).update({
             #      "short-url": short_url
             # })
             # return short_url
-            short_url = "Bhai Bhai"
-            db.child("Forms").child(request.cookies.get("__user__")).child(variable_1).update({
-                 "short-url": short_url
-            })
-            return short_url
+
+app.run(debug=True)        
+
 
