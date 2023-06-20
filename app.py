@@ -185,7 +185,7 @@ def logout_form():
 
 @app.before_request
 def before_request_func():
-    print(request.endpoint)
+    # print(request.endpoint)
     if request.endpoint in exempted_endpoints:
         return 
     if 'user_id' not in session:
