@@ -406,19 +406,33 @@
 
   
     <script>
-          function Copy_Clip(){
-      var copyText = document.getElementById("public_url_form");
+   function Copy_Clip() {
+  var copyText = document.getElementById("public_url_form");
 
-      /* Select the text field */
-      copyText.select();
-      copyText.setSelectionRange(0, 99999); /* For mobile devices */
-    
-       /* Copy the text inside the text field */
-      navigator.clipboard.writeText(copyText.value);
-    
-      /* Alert the copied text */
-      alert("Link Copied!!");
+  /* Select the text field */
+  copyText.select();
+  copyText.setSelectionRange(0, 99999); /* For mobile devices */
+
+  /* Request permission to access the clipboard */
+  navigator.permissions.query({ name: 'clipboard-write' }).then((result) => {
+    if (result.state === 'granted' || result.state === 'prompt') {
+      /* Copy the text inside the text field */
+      navigator.clipboard.writeText(copyText.value).then(() => {
+        /* Alert the copied text */
+        alert("Link Copied!!");
+      }).catch((error) => {
+        /* Handle clipboard write error */
+        console.error('Failed to copy text: ', error);
+      });
+    } else {
+      /* Handle clipboard write permission denied */
+      console.error('Clipboard write permission denied');
     }
+  }).catch((error) => {
+    /* Handle permission query error */
+    console.error('Failed to query clipboard permissions: ', error);
+  });
+}
    
       var main_json = "{{form_data['data']}}"
       var all_json_unparsed = decodeHtml(main_json.slice(1,main_json.length-1))
