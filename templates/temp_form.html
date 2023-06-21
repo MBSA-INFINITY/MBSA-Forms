@@ -406,6 +406,19 @@
 
   
     <script>
+          function Copy_Clip(){
+      var copyText = document.getElementById("public_url_form");
+
+      /* Select the text field */
+      copyText.select();
+      copyText.setSelectionRange(0, 99999); /* For mobile devices */
+    
+       /* Copy the text inside the text field */
+      navigator.clipboard.writeText(copyText.value);
+    
+      /* Alert the copied text */
+      alert("Link Copied!!");
+    }
    
       var main_json = "{{form_data['data']}}"
       var all_json_unparsed = decodeHtml(main_json.slice(1,main_json.length-1))
@@ -677,19 +690,7 @@
        }
        return result;
     }
-    function Copy_Clip(){
-      var copyText = document.getElementById("public_url_form");
 
-      /* Select the text field */
-      copyText.select();
-      copyText.setSelectionRange(0, 99999); /* For mobile devices */
-    
-       /* Copy the text inside the text field */
-      navigator.clipboard.writeText(copyText.value);
-    
-      /* Alert the copied text */
-      alert("Link Copied!!");
-    }
     document.getElementById("public_url_form").value = window.location.origin+"{{form_data['public_url']}}"
     document.getElementById("public_url_form").setAttribute("value", window.location.origin+"{{form_data['public_url']}}")
     document.getElementById("form_accepting_response").addEventListener('change',function(e){
