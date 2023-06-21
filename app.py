@@ -152,16 +152,15 @@ def signup():
         try:
             _user_ = auth.create_user_with_email_and_password(username ,password)
             auth.send_email_verification(_user_['idToken'])
-            db.child("User_Emails").child(username.split("@")[0]).set({
-                "UID":_user_['localId']
-            })
+            # db.child("User_Emails").child(username.split("@")[0]).set({
+            #     "UID":_user_['localId']
+            # })
             db.child("Users").child(_user_['localId']).set({
                 "name":name,    
             })
             return render_template("success.html")
         except Exception as e:
-            pass
-            return render_template(url_for('index'))
+            return redirect(url_for('index'))
     return render_template("signup.html")
 
 @app.route('/passchange',methods = ['GET','POST'])
