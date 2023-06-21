@@ -38,7 +38,7 @@ app = Flask(__name__)
 
 app.secret_key = os.environ.get("SESSION_SECRET_KEY")
 
-exempted_endpoints = ['index','static','passchange','signup','open_form']
+exempted_endpoints = ['index','static','passchange','signup','open_form','public_form']
 
 @app.route("/",methods = ['GET','POST'])
 def index():
