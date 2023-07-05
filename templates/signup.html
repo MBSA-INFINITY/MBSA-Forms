@@ -7,7 +7,8 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.88.1">
-    <title>Sign Up</title>
+    <title>MBSA Forms | Sign Up</title>
+    <link rel="shortcut icon" href="{{url_for('static',filename='favicon.png')}}" type="image/x-icon">
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/sign-in/">
 
@@ -86,8 +87,8 @@ body {
     
 <main class="form-signin" style="border: 2px solid black">
   <form action="/signup" method="post" onsubmit="return validate()">
-    <img class="mb-4" src="static/admin.jfif" alt="" width="100" height="100">
-    <h1 class="h3 mb-3 fw-normal">SIGN UP</h1>
+    <img class="mb-4" src="static/logo_main.png" alt="" width="250" height="150">
+    <h1 class="h3 mb-3 fw-normal">MBSA Forms | Sign Up</h1>
 
     <div class="form-floating my-3">
       <input type="text" class="form-control" name="name" placeholder="name@example.com" required>
@@ -108,9 +109,9 @@ body {
       <label for="floatingPassword">Renter Password</label>
     </div>
 
-    <button class="w-100 btn btn-lg btn-primary" type="submit">REGISTER</button><br><br>
+    <button class="w-100 btn btn-lg" type="submit" style="background-color: #73c6b0;">REGISTER</button><br><br>
   </form>
-    <a href="/"><span><b><i class="fa fa-arrow-right" aria-hidden="true"></i>Already Registered?</b><i class="fa fa-arrow-left" aria-hidden="true"></i></span></a>
+    <a href="/" style="color:#73c6b0"><span><b><i class="fa fa-arrow-right" aria-hidden="true"></i>Already Registered?</b><i class="fa fa-arrow-left" aria-hidden="true"></i></span></a>
     <p class="mt-5 mb-3 text-muted">&copy; MBSA CORPORATION</p>
 </main>
 

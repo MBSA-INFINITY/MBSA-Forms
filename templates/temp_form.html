@@ -14,7 +14,8 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.min.js" integrity="sha256-WVsM3xrcqyuFNF3W1qtIKbHFsD0977nDQA8DCMp1zCw=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js" integrity="sha256-2/3R3NV5zryj0fDjD3cDh+SNiWQ/TJiMVZzAo5FrhiU=" crossorigin="anonymous"></script>
-  <title>Admin Panel</title>
+    <title>MBSA Forms</title>
+    <link rel="shortcut icon" href="{{url_for('static',filename='favicon.png')}}" type="image/x-icon">
 </head>
 <style>
   html{
@@ -22,6 +23,10 @@
   }
   body{
     background-color: #d3d7e7;
+    /* background-image: url("{{url_for('static',filename='logo_main.png')}}");
+  background-blend-mode: multiply;
+  background-size: cover;
+  background-repeat: no-repeat; */
 }
   .fnt{
     font-family: Amaranth;
@@ -57,7 +62,7 @@
   {{ handle_catch(caller, on_exception) }}
   {% endmacro %}
   <div>
-    <h1 class="text-center" style="font-family:Amaranth ;">{{form_data['form_title']}}</h1>
+    <h2 class="text-center" style="font-family:Amaranth ;"><img src="{{url_for('static',filename='favicon.png')}}" alt="" height="50"> {{form_data['form_title']}} <img src="{{url_for('static',filename='favicon.png')}}" alt="" height="50"></h2>
     <!-- Button trigger modal -->
     <div class="row my-4">
       <div class="col">

@@ -10,11 +10,16 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href='https://fonts.googleapis.com/css?family=Sofia|ABeeZee|Amaranth' rel='stylesheet'>
-  <title>Admin Panel</title>
+  <title>MBSA Forms | Admin Panel</title>
+  <link rel="shortcut icon" href="{{url_for('static',filename='favicon.png')}}" type="image/x-icon">
 </head>
 <style>
   body{
     background-color: #d3d7e7;
+    /* background-image: url("{{url_for('static',filename='logo_main.png')}}");
+  background-blend-mode: multiply;
+  background-size: cover;
+  background-repeat: no-repeat; */
 }
   .fnt{
     font-family: Amaranth;
@@ -33,7 +38,7 @@
   {{ handle_catch(caller, on_exception) }}
   {% endmacro %}
   <div>
-    <h1 class="text-center" style="font-family:Amaranth ;">🤷‍♂️ M.B.S.A. Forms 🤷‍♂️</h1>
+    <h1 class="text-center" style="font-family:Amaranth ;"> <img src="{{url_for('static',filename='favicon.png')}}" alt="" height="40"> MBSA Forms <img src="{{url_for('static',filename='favicon.png')}}" alt="" height="40"></h1>
     <!-- Button trigger modal -->
     <div class="row">
       <div class="col-1">

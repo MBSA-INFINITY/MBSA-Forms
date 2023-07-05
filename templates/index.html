@@ -7,8 +7,8 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.88.1">
-    <title>Sign In</title>
-
+    <title>MBSA Forms | Sign In</title>
+    <link rel="shortcut icon" href="{{url_for('static',filename='favicon.png')}}" type="image/x-icon">
     <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/sign-in/">
 
     
@@ -96,8 +96,8 @@ body {
   </div>
   {% endif %}
   <form action="/" method="post">
-    <img class="mb-4" src="static/admin.jfif" alt="" width="100" height="100">
-    <h1 class="h3 mb-3 fw-normal">SIGN IN</h1>
+    <img class="mb-4" src="static/logo_main.png" alt="" width="250" height="150">
+    <h2 class="h3 mb-3 fw-normal">MBSA Forms | Login</h2>
 
     <div class="form-floating">
       <input type="email" class="form-control" name="username" placeholder="name@example.com">
@@ -108,11 +108,11 @@ body {
       <label for="floatingPassword">Password</label>
     </div>
 
-    <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button><br><br>
+    <button class="w-100 btn btn-lg" type="submit" style="background-color: #73c6b0;">Sign in</button><br><br>
   </form>
-    <a href="/passchange"><span><i class="fa fa-key" aria-hidden="true"></i><b> Forgot Password</b></span></a><br>
-    <a href="/signup"><span><i class="fa fa-arrow-right" aria-hidden="true"></i><b> Create An Account </b></span></a>
-    <p class="mt-5 mb-3 text-muted">&copy; MBSA CORPORATION</p>
+    <a href="/passchange" style="color:#73c6b0"><span><i class="fa fa-key" aria-hidden="true"></i><b> Forgot Password</b></span></a><br>
+    <a href="/signup" style="color:#73c6b0"><span><i class="fa fa-arrow-right" aria-hidden="true"></i><b> Create An Account </b></span></a>
+    <p class="mt-5 mb-3 text-muted">&copy; TECH PANDITS</p>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
