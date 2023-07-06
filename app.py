@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, make_response, redirect, session
+from flask import Flask, render_template, request, url_for, make_response, redirect, session, flash
 from firebase import Firebase
 from definitions import day_number, month_number
 import json
@@ -149,18 +149,27 @@ def signup():
         name = request.form.get("name")
         username = request.form.get("username")
         password = request.form.get("password")
-        try:
-            _user_ = auth.create_user_with_email_and_password(username ,password)
-            auth.send_email_verification(_user_['idToken'])
-            # db.child("User_Emails").child(username.split("@")[0]).set({
-            #     "UID":_user_['localId']
-            # })
-            db.child("Users").child(_user_['localId']).set({
-                "name":name,    
-            })
-            return render_template("success.html")
-        except Exception as e:
-            return redirect(url_for('index'))
+        re_password = request.form.get("re_password")
+        if password == re_password:
+            if len(password)>=6:
+                try:
+                    _user_ = auth.create_user_with_email_and_password(username ,password)
+                    auth.send_email_verification(_user_['idToken'])
+                    # db.child("User_Emails").child(username.split("@")[0]).set({
+                    #     "UID":_user_['localId']
+                    # })
+                    db.child("Users").child(_user_['localId']).set({
+                        "name":name,    
+                    })
+                    return render_template("success.html")
+                except Exception as e:
+                    return redirect(url_for('index'))
+            else:
+                flash('Password is less than 6 characters!')
+                return redirect("/signup")
+        else:
+            flash('Both Passwords do not match!')
+            return redirect("/signup")
     return render_template("signup.html")
 
 @app.route('/passchange',methods = ['GET','POST'])

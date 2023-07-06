@@ -84,6 +84,18 @@ body {
   <body class="text-center">
     
 <main class="form-signin" style="border: 2px solid black">
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+      <ul class=flashes>
+      {% for message in messages %}
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          <strong>{{message}}</strong>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+      </ul>
+  {% endif %}
+  {% endwith %}
     {% if res_code == 500 %}
   <div class="alert alert-danger alert-dismissible fade show" role="alert">
      <strong>Invalid Password!!</strong> 
